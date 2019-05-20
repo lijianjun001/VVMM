@@ -3,6 +3,7 @@ package com.nirvana.ylmc.httplib.myOkhttp.converter;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonWriter;
+import com.nirvana.ylmc.httplib.myOkhttp.BaseBody;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -25,12 +26,6 @@ public class MyGsonRequestBodyConverter<T> implements Converter<T, RequestBody> 
 
     private final Gson gson;
     private final TypeAdapter<T> adapter;
-    private String version;
-
-    public MyGsonRequestBodyConverter<T> setVersion(String version) {
-        this.version = version;
-        return this;
-    }
 
 
     public MyGsonRequestBodyConverter(Gson gson, TypeAdapter<T> adapter) {
@@ -43,20 +38,20 @@ public class MyGsonRequestBodyConverter<T> implements Converter<T, RequestBody> 
         Buffer buffer = new Buffer();
         Writer writer = new OutputStreamWriter(buffer.outputStream(), UTF_8);
         JsonWriter jsonWriter = gson.newJsonWriter(writer);
-        try {
-            value.getClass().getMethod("setPlatform", String.class).invoke(value, "01");
-            if (version != null) {
-                value.getClass().getMethod("setVersion", String.class).invoke(value, version);
+        if (value instanceof BaseBody) {//统一给body参数添加通用参数
+            try {
+                value.getClass().getMethod("setPlatform", String.class).invoke(value, "01");
+                value.getClass().getMethod("setVersion", String.class).invoke(value, "001");
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
             }
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
         }
         adapter.write(jsonWriter, value);
         jsonWriter.close();
-        return RequestBody.create(MEDIA_TYPE, buffer.readByteString());
+        return RequestBody.create(MEDIA_TYPE, buffer.readByteString());//将java其对象转换为json串
     }
 }

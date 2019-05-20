@@ -19,8 +19,12 @@ public abstract class BaseModel implements LifecycleObserver {
         mRxManager = new RxManager();
     }
 
+    /**
+     * 页面销毁是，取消所有请求
+     */
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     void onDestroy() {
+
         mRxManager.clear();
     }
 }

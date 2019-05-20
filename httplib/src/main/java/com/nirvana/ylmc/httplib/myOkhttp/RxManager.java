@@ -15,6 +15,7 @@ public class RxManager {
         mCompositeSubscription.add(m);
     }
 
+
     public void clear() {
         mCompositeSubscription.unsubscribe();// 取消订阅
     }

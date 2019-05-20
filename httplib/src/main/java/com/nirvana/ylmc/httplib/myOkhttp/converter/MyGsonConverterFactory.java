@@ -19,14 +19,6 @@ import retrofit2.Retrofit;
 public class MyGsonConverterFactory extends Converter.Factory {
     private final Gson gson;
 
-    private String version;
-
-
-    public MyGsonConverterFactory setVersion(String version) {
-
-        this.version = version;
-        return this;
-    }
 
     private MyGsonConverterFactory(Gson gson) {
         if (gson == null) throw new NullPointerException("gson == null");
@@ -50,7 +42,7 @@ public class MyGsonConverterFactory extends Converter.Factory {
     @Override
     public Converter<?, RequestBody> requestBodyConverter(Type type, Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {
         TypeAdapter<?> adapter = gson.getAdapter(TypeToken.get(type));
-        return new MyGsonRequestBodyConverter<>(gson, adapter).setVersion(version);
+        return new MyGsonRequestBodyConverter<>(gson, adapter);
     }
 }
 

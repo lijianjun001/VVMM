@@ -54,7 +54,7 @@ public class MyGsonResponseBodyConverter<T> implements Converter<ResponseBody, T
         ByteArrayInputStream bis = new ByteArrayInputStream(response.getBytes());
         InputStreamReader reader = new InputStreamReader(bis, charset);
         try {
-            return adapter.fromJson(reader);
+            return adapter.fromJson(reader);//将返回值转换为java对象
         } finally {
             value.close();
         }
