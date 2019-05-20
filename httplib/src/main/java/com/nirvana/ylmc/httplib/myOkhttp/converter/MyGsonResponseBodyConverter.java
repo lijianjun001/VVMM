@@ -1,15 +1,17 @@
 package com.nirvana.ylmc.httplib.myOkhttp.converter;
 
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
 import com.nirvana.ylmc.httplib.myOkhttp.ApiException;
 import com.nirvana.ylmc.httplib.myOkhttp.ResultModel;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
 import okhttp3.MediaType;
@@ -24,8 +26,10 @@ public class MyGsonResponseBodyConverter<T> implements Converter<ResponseBody, T
     private static final Charset UTF_8 = Charset.forName("UTF-8");
     private final Gson mGson;
     private final TypeAdapter<T> adapter;
+    private Type type;
 
-    public MyGsonResponseBodyConverter(Gson gson, TypeAdapter<T> adapter) {
+    public MyGsonResponseBodyConverter(Type type, Gson gson, TypeAdapter<T> adapter) {
+        this.type = type;
         mGson = gson;
         this.adapter = adapter;
     }
@@ -33,10 +37,14 @@ public class MyGsonResponseBodyConverter<T> implements Converter<ResponseBody, T
     @Override
     public T convert(ResponseBody value) throws IOException {
         String response = value.string();
-//        Log.d("MyGsonResponse", response);
+        if (type instanceof ParameterizedType) {
+            Log.d("MyGsonResponse" + ((ParameterizedType) type).getActualTypeArguments()[0].toString(), response);
+        } else {
+            Log.d("MyGsonResponse" + type.toString(), response);
+        }
         ResultModel<String> re = mGson.fromJson(response, ResultModel.class);
-        //关注的重点，自定义响应码中非0的情况，一律抛出ApiException异常。
-        //这样，我们就成功的将该异常交给onError()去处理了。
+        //响应码中负数的情况，一律抛出ApiException异常。
+        //这样，我们就成功的将该异常交给Observer的onError()去处理了。
         if (re.getCode() < 0) {
             value.close();
             throw new ApiException(re.getCode(), re.getMessage());
@@ -45,12 +53,12 @@ public class MyGsonResponseBodyConverter<T> implements Converter<ResponseBody, T
         Charset charset = mediaType != null ? mediaType.charset(UTF_8) : UTF_8;
         ByteArrayInputStream bis = new ByteArrayInputStream(response.getBytes());
         InputStreamReader reader = new InputStreamReader(bis, charset);
-        JsonReader jsonReader = mGson.newJsonReader(reader);
         try {
-            return adapter.read(jsonReader);
+            return adapter.fromJson(reader);
         } finally {
             value.close();
         }
     }
+
 }
 

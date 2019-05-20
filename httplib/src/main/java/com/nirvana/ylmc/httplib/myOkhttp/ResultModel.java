@@ -1,9 +1,9 @@
 package com.nirvana.ylmc.httplib.myOkhttp;
 
-public class ResultModel<T> {
+public class ResultModel<D> {
     private int code;//0或者10086成功其他失败
     private String message;//错误信息
-    private T data;//成功返回的数据
+    private D data;//成功返回的数据
 
     public int getCode() {
         return code;
@@ -21,11 +21,12 @@ public class ResultModel<T> {
         this.message = message;
     }
 
-    public T getData() {
+    public D getData() {
         return data;
     }
 
-    public void setData(T data) {
+    public void setData(D data) {
         this.data = data;
     }
+
 }

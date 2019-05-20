@@ -7,6 +7,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 
 import okhttp3.MediaType;
@@ -24,6 +25,13 @@ public class MyGsonRequestBodyConverter<T> implements Converter<T, RequestBody> 
 
     private final Gson gson;
     private final TypeAdapter<T> adapter;
+    private String version;
+
+    public MyGsonRequestBodyConverter<T> setVersion(String version) {
+        this.version = version;
+        return this;
+    }
+
 
     public MyGsonRequestBodyConverter(Gson gson, TypeAdapter<T> adapter) {
         this.gson = gson;
@@ -35,6 +43,18 @@ public class MyGsonRequestBodyConverter<T> implements Converter<T, RequestBody> 
         Buffer buffer = new Buffer();
         Writer writer = new OutputStreamWriter(buffer.outputStream(), UTF_8);
         JsonWriter jsonWriter = gson.newJsonWriter(writer);
+        try {
+            value.getClass().getMethod("setPlatform", String.class).invoke(value, "01");
+            if (version != null) {
+                value.getClass().getMethod("setVersion", String.class).invoke(value, version);
+            }
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
         adapter.write(jsonWriter, value);
         jsonWriter.close();
         return RequestBody.create(MEDIA_TYPE, buffer.readByteString());

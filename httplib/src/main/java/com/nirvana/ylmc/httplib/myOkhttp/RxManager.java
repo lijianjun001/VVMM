@@ -8,6 +8,7 @@ import rx.subscriptions.CompositeSubscription;
  */
 
 public class RxManager {
+
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();// 管理订阅者
 
     public void add(Subscription m) {
