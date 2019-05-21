@@ -2,6 +2,8 @@ package jetpack.zmkj.com.jetpack.http;
 
 import android.util.Log;
 
+import com.nirvana.ylmc.httplib.myOkhttp.ApiException;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
@@ -23,6 +25,11 @@ public abstract class MyObserver<T> implements Observer<T> {
         Type genType = getClass().getGenericSuperclass();
         Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
         Log.e(params[0].toString(), e.toString());
+        if (e instanceof ApiException){
+            if (((ApiException) e).getErrorCode()==-1){//重新登录
+
+            }
+        }
     }
 
     @Override

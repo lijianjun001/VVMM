@@ -21,7 +21,7 @@ public class RetrofitCreator {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.APP_URL_CLIENT_IP_PORT)
                 .client(configClient())
-                .addConverterFactory(MyGsonConverterFactory.create().setVersion("001"))
+                .addConverterFactory(MyGsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
         return retrofit;
