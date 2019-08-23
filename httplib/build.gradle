@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
 
     lintOptions {
@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
@@ -30,7 +30,6 @@ ext.rxandroid_version = '2.3.0'
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
 
-    api 'com.android.support:appcompat-v7:27.1.1'
     api "com.squareup.retrofit2:retrofit:$rxandroid_version"
     api "com.squareup.retrofit2:converter-gson:$rxandroid_version"
     api "com.squareup.retrofit2:adapter-rxjava:$rxandroid_version"

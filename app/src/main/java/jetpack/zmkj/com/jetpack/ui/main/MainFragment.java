@@ -11,11 +11,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.airbnb.lottie.LottieComposition;
+import com.airbnb.lottie.OnCompositionLoadedListener;
+
 import jetpack.zmkj.com.jetpack.R;
 
 public class MainFragment extends Fragment {
 
     private MainViewModel mViewModel;
+    private LottieAnimationView lottieAnimationView;
+
 
     private TextView loginTv1;
     private TextView nameTv1;
@@ -36,10 +42,10 @@ public class MainFragment extends Fragment {
         loginTv1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewModel.login("11111","11111");
+                mViewModel.login("11111", "11111");
             }
         });
-
+        lottieAnimationView = view.findViewById(R.id.lottie_view);
         return view;
     }
 
@@ -55,6 +61,13 @@ public class MainFragment extends Fragment {
                 nameTv2.setText(userEntity.getLastName());
             }
         });//绑定数据，view不和model直接交互，通过viewModel交互
+        LottieComposition.Factory.fromAssetFileName(getContext(), "LottieLogo2.json", new OnCompositionLoadedListener() {
+            @Override
+            public void onCompositionLoaded(@Nullable LottieComposition composition) {
+                lottieAnimationView.setComposition(composition);
+                lottieAnimationView.playAnimation();
+            }
+        });
     }
 
 }
