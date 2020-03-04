@@ -1,20 +1,33 @@
 package jetpack.zmkj.com.jetpack.ui.main;
 
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+import androidx.paging.DataSource;
+import androidx.paging.LivePagedListBuilder;
+import androidx.paging.PagedList;
+import jetpack.zmkj.com.jetpack.CustomApplication;
 
 public class MainViewModel extends ViewModel implements LoginListener {
 
     private UserModel userModel;
+    private DataSource.Factory<Integer, User> userFactory =
+            CustomApplication.getInstance().getAppDatabase().userDao().getUsers();
 
+    LiveData<PagedList<User>> userList;
 
     public MainViewModel() {
         userModel = new UserModel();//如果以后更换请求方式，直接修改这个地方即可，
+
+        userList = new LivePagedListBuilder<>(userFactory, 10).build();
+
+
     }
 
-    private MutableLiveData<UserEntity> userMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<User> userMutableLiveData = new MutableLiveData<>();
 
-    public MutableLiveData<UserEntity> getUserMutableLiveData() {
+    public MutableLiveData<User> getUserMutableLiveData() {
         return userMutableLiveData;
     }
 
@@ -25,8 +38,8 @@ public class MainViewModel extends ViewModel implements LoginListener {
     }
 
     @Override
-    public void onSuccess(UserEntity userEntity) {//登陆成功回调
-        userMutableLiveData.postValue(userEntity);//使用MutableLiveData,使model和view解耦
+    public void onSuccess(User user) {//登陆成功回调
+        userMutableLiveData.postValue(user);//使用MutableLiveData,使model和view解耦
     }
 
     @Override

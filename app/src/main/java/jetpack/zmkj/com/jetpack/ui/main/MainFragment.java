@@ -1,31 +1,29 @@
 package jetpack.zmkj.com.jetpack.ui.main;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.airbnb.lottie.LottieAnimationView;
-import com.airbnb.lottie.LottieComposition;
-import com.airbnb.lottie.OnCompositionLoadedListener;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.PagedList;
+import androidx.recyclerview.widget.RecyclerView;
 import jetpack.zmkj.com.jetpack.R;
 
 public class MainFragment extends Fragment {
 
     private MainViewModel mViewModel;
-    private LottieAnimationView lottieAnimationView;
 
 
     private TextView loginTv1;
     private TextView nameTv1;
     private TextView nameTv2;
+    private RecyclerView recyclerView;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -45,7 +43,8 @@ public class MainFragment extends Fragment {
                 mViewModel.login("11111", "11111");
             }
         });
-        lottieAnimationView = view.findViewById(R.id.lottie_view);
+        recyclerView = view.findViewById(R.id.recyclerView);
+
         return view;
     }
 
@@ -54,20 +53,21 @@ public class MainFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
-        mViewModel.getUserMutableLiveData().observe(this, new Observer<UserEntity>() {
+        mViewModel.getUserMutableLiveData().observe(this.getViewLifecycleOwner(), new Observer<User>() {
             @Override
-            public void onChanged(@Nullable UserEntity userEntity) {
-                nameTv1.setText(userEntity.getFirstName());
-                nameTv2.setText(userEntity.getLastName());
+            public void onChanged(@Nullable User user) {
+                nameTv1.setText(user.getFirstName());
+                nameTv2.setText(user.getLastName());
             }
         });//绑定数据，view不和model直接交互，通过viewModel交互
-        LottieComposition.Factory.fromAssetFileName(getContext(), "LottieLogo2.json", new OnCompositionLoadedListener() {
+        final UserAdapter userAdapter = new UserAdapter();
+        mViewModel.userList.observe(this, new Observer<PagedList<User>>() {
             @Override
-            public void onCompositionLoaded(@Nullable LottieComposition composition) {
-                lottieAnimationView.setComposition(composition);
-                lottieAnimationView.playAnimation();
+            public void onChanged(PagedList<User> users) {
+                userAdapter.submitList(users);
             }
         });
+        recyclerView.setAdapter(userAdapter);
     }
 
 }

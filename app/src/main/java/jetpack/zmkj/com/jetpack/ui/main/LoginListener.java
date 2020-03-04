@@ -1,5 +1,5 @@
 package jetpack.zmkj.com.jetpack.ui.main;
 
-public interface LoginListener extends BaseListener<UserEntity> {
+public interface LoginListener extends BaseListener<User> {
 
 }

@@ -3,6 +3,11 @@ package jetpack.zmkj.com.jetpack.ui.main;
 import com.nirvana.ylmc.httplib.myOkhttp.HttpServiceAnnotation;
 import com.nirvana.ylmc.httplib.myOkhttp.RxSchedulerHelper;
 
+import androidx.paging.DataSource;
+import androidx.paging.PagedList;
+import androidx.paging.RxPagedListBuilder;
+import io.reactivex.Observable;
+import jetpack.zmkj.com.jetpack.CustomApplication;
 import jetpack.zmkj.com.jetpack.http.CustomerService;
 import jetpack.zmkj.com.jetpack.http.MyObserver;
 
@@ -12,19 +17,21 @@ public class UserModel extends BaseModel implements IUserModel {
     @HttpServiceAnnotation
     CustomerService customerService;
 
+
+
     @Override
     public void login(String username, String password, final LoginListener loginListener) {
 
         try {
             Thread.sleep(1000);
-            UserEntity userEntity = new UserEntity("li", "jianjun");
-            loginListener.onSuccess(userEntity);
+            User user = new User("li", "jianjun");
+            loginListener.onSuccess(user);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         mRxManager.add(customerService.login(username, password)
-                .compose(RxSchedulerHelper.<UserEntity>io_main())
-                .subscribe(new MyObserver<UserEntity>() {
+                .compose(RxSchedulerHelper.<User>io_main())
+                .subscribe(new MyObserver<User>() {
                     @Override
                     public void onCompleted() {
 
@@ -36,10 +43,16 @@ public class UserModel extends BaseModel implements IUserModel {
                     }
 
                     @Override
-                    public void onNext(UserEntity userEntity) {
-                        loginListener.onSuccess(userEntity);
+                    public void onNext(User user) {
+                        loginListener.onSuccess(user);
                     }
                 }));
+    }
+
+
+    public void getUserList() {
+        int[] ids = new int[]{1, 2};
+        CustomApplication.getInstance().getAppDatabase().userDao().loadAllByIds(ids);
     }
 
 }

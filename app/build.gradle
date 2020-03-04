@@ -27,6 +27,8 @@ android {
 def nav_version = '1.0.0'
 def work_version = "1.0.1"
 ext.rxandroid_version = '2.3.0'
+ext.paging_version = '2.1.1'
+def room_version = "2.2.3"
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     api project(":httplib")
@@ -37,7 +39,12 @@ dependencies {
     api "android.arch.navigation:navigation-ui:$nav_version"
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     api "android.arch.work:work-runtime:$work_version"
-    api "com.airbnb.android:lottie:2.3.1"
+    api "androidx.paging:paging-runtime:$paging_version"
+    api "androidx.paging:paging-rxjava2:$paging_version"
+    testImplementation "androidx.paging:paging-common:$paging_version"
+    api "androidx.room:room-rxjava2:$room_version"
+    api 'androidx.appcompat:appcompat:1.0.2'//1.1.0在5.Xvivo手机上奔溃，暂时不要升级
+    api 'com.google.android.material:material:1.2.0-alpha02'
 
 }
 repositories {
