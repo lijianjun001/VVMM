@@ -3,10 +3,6 @@ package jetpack.zmkj.com.jetpack.ui.main;
 import com.nirvana.ylmc.httplib.myOkhttp.HttpServiceAnnotation;
 import com.nirvana.ylmc.httplib.myOkhttp.RxSchedulerHelper;
 
-import androidx.paging.DataSource;
-import androidx.paging.PagedList;
-import androidx.paging.RxPagedListBuilder;
-import io.reactivex.Observable;
 import jetpack.zmkj.com.jetpack.CustomApplication;
 import jetpack.zmkj.com.jetpack.http.CustomerService;
 import jetpack.zmkj.com.jetpack.http.MyObserver;
@@ -16,7 +12,6 @@ public class UserModel extends BaseModel implements IUserModel {
 
     @HttpServiceAnnotation
     CustomerService customerService;
-
 
 
     @Override

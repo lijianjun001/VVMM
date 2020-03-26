@@ -9,6 +9,6 @@ import rx.Observable;
 public interface CustomerService
 {
 
-     @POST("user/login")
+     @POST("/user/login")
      Observable<User> login(@Field("username") String username, @Field("password")String password);
 }

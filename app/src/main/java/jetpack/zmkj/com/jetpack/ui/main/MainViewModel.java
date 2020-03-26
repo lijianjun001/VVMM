@@ -7,7 +7,15 @@ import androidx.lifecycle.ViewModel;
 import androidx.paging.DataSource;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.Operation;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 import jetpack.zmkj.com.jetpack.CustomApplication;
+import jetpack.zmkj.com.jetpack.MyWork;
 
 public class MainViewModel extends ViewModel implements LoginListener {
 
@@ -21,8 +29,6 @@ public class MainViewModel extends ViewModel implements LoginListener {
         userModel = new UserModel();//如果以后更换请求方式，直接修改这个地方即可，
 
         userList = new LivePagedListBuilder<>(userFactory, 10).build();
-
-
     }
 
     private MutableLiveData<User> userMutableLiveData = new MutableLiveData<>();
@@ -35,6 +41,20 @@ public class MainViewModel extends ViewModel implements LoginListener {
     public void login(String username, String password) {
 
         userModel.login(username, password, this);
+    }
+
+    /**
+     * workmanager 条件满足时候执行 或者 app重新启动时候执行，app杀死后，work也不会执行，网上说的有问题，亲自测试多次
+     */
+
+    public LiveData<Operation.State> startWork() {
+
+
+        Data data = new Data.Builder().putString("key", "1111").build();
+        Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).setRequiresBatteryNotLow(true).build();
+        WorkRequest request = new OneTimeWorkRequest.Builder(MyWork.class).setInputData(data).setConstraints(constraints).build();
+        return WorkManager.getInstance().enqueue(request).getState();
+
     }
 
     @Override

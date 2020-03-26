@@ -19,11 +19,6 @@ public class User {
         this.lastName = lastName;
     }
 
-    public User(int uid, String firstName, String lastName) {
-        this.uid = uid;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
 
     public int getUid() {
         return uid;

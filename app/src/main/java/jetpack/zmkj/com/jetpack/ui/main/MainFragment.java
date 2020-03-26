@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Operation;
 import jetpack.zmkj.com.jetpack.R;
 
 public class MainFragment extends Fragment {
@@ -40,7 +41,13 @@ public class MainFragment extends Fragment {
         loginTv1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewModel.login("11111", "11111");
+//                mViewModel.login("11111", "11111");
+                mViewModel.startWork().observe(getViewLifecycleOwner(), new Observer<Operation.State>() {
+                    @Override
+                    public void onChanged(Operation.State state) {
+
+                    }
+                });
             }
         });
         recyclerView = view.findViewById(R.id.recyclerView);
