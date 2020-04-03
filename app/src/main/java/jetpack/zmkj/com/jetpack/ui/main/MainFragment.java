@@ -1,5 +1,7 @@
 package jetpack.zmkj.com.jetpack.ui.main;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,12 +10,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.Operation;
+import jetpack.zmkj.com.jetpack.MyService;
 import jetpack.zmkj.com.jetpack.R;
 
 public class MainFragment extends Fragment {
@@ -43,9 +47,11 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
 //                mViewModel.login("11111", "11111");
                 mViewModel.startWork().observe(getViewLifecycleOwner(), new Observer<Operation.State>() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onChanged(Operation.State state) {
 
+                        getActivity().startForegroundService(new Intent(getContext(), MyService.class));
                     }
                 });
             }
@@ -75,6 +81,7 @@ public class MainFragment extends Fragment {
             }
         });
         recyclerView.setAdapter(userAdapter);
+
     }
 
 }

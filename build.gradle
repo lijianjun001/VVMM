@@ -6,6 +6,7 @@ buildscript {
     repositories {
         google()
         jcenter()
+//        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.3'
@@ -23,6 +24,7 @@ allprojects {
         maven {
             url "https://dl.bintray.com/antelope001/maven"
         }
+//        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
     }
 }
 
@@ -31,7 +33,7 @@ task clean(type: Delete) {
 }
 
 tasks.withType(Javadoc) {//上传代码如果有中文注释，需要添加如下代码
-    options{
+    options {
         encoding "UTF-8"
         charSet 'UTF-8'
         links "http://docs.oracle.com/javase/7/docs/api"

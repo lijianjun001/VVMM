@@ -1,7 +1,6 @@
 package jetpack.zmkj.com.jetpack;
 
 
-import static junit.framework.Assert.assertEquals;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -11,5 +10,9 @@ import static junit.framework.Assert.assertEquals;
 public class ExampleUnitTest {
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
+    }
+
+    private void assertEquals(int i, int i1) {
+
     }
 }
