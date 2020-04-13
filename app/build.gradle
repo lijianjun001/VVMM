@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'com.google.protobuf'//声明插件
 android {
     compileSdkVersion 28
     lintOptions {
@@ -9,9 +10,15 @@ android {
         applicationId "jetpack.zmkj.com.jetpack"
         minSdkVersion 18
         targetSdkVersion 28
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
     dataBinding {
         enabled = true
@@ -26,7 +33,33 @@ android {
     sourceSets {
         //这里主要是添加存放kotlin的测试文件夹，不然我们在test里创建kotlin文件夹是没什么效果的
         test.java.srcDirs += 'src/test/kotlin'
+        main {
+            proto {
+                // 除了默认的'src/main/proto'目录新增proto文件的方法
+                srcDir 'src/main/protos'
+                include '**/*.proto'
+            }
+        }
     }
+}
+
+protobuf { //protobuf生成的配置
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.5.1'
+    }
+    generatedFilesBaseDir = "$projectDir/src/"
+    //这里配置生成目录，编译后会在 build\generated\source\proto 的目录下生成对应的java文件
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                remove java
+            }
+            task.builtins {
+                java {}
+            }
+        }
+    }
+
 }
 def nav_version = '1.0.0'
 def work_version = "1.0.1"
@@ -68,6 +101,11 @@ dependencies {
     api 'androidx.appcompat:appcompat:1.0.2'//1.1.0在5.Xvivo手机上奔溃，暂时不要升级
     api 'com.google.android.material:material:1.2.0-alpha02'
 
+    api 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
+    api 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
+    api 'com.google.protobuf:protobuf-java:3.5.1' //依赖的protobuf-java lib
+    api 'com.google.protobuf:protobuf-lite:3.0.1'
+    implementation "org.java-websocket:Java-WebSocket:1.4.0"
 }
 repositories {
     mavenCentral()
