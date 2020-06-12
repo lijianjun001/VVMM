@@ -23,11 +23,15 @@ public interface CustomerService {
     Observable<User> getVCode(@Field("mobile") String mobile, @Field("type") String type);
 
     @POST("/PC0106")
+    @FormUrlEncoded
     Observable<ResultModel<UserEntity>> vCodeLogin(@Field("mobile") String mobile, @Field("code") String code);
 
-    @FormUrlEncoded
+
     @POST("PC0105")
+    @FormUrlEncoded
     Observable<ResultModel<UserEntity>> login(@Field("mobile") String mobile, @Field("password") String password);
+
+
 
 
 }

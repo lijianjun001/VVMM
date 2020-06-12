@@ -32,26 +32,26 @@ public class RetrofitCreator {
 
     private static final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
 
-    private static OkHttpClient configClient() {
-        OkHttpClient okHttpClient = new OkHttpClient().newBuilder().cookieJar(new CookieJar() {
-            @Override
-            public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-                cookieStore.put(url.host(), cookies);
-            }
+    private static CookieJar cookieJar = new CookieJar() {
+        @Override
+        public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+            cookieStore.put(url.host(), cookies);
+        }
 
-            @Override
-            public List<Cookie> loadForRequest(HttpUrl url) {
-                List<Cookie> cookies = cookieStore.get(url.host());
-                return cookies != null ? cookies : new ArrayList<Cookie>();
-            }
-        }).addInterceptor(new Interceptor() {
+        @Override
+        public List<Cookie> loadForRequest(HttpUrl url) {
+            List<Cookie> cookies = cookieStore.get(url.host());
+            return cookies != null ? cookies : new ArrayList<Cookie>();
+        }
+    };
+
+    private static OkHttpClient configClient() {
+        OkHttpClient okHttpClient = new OkHttpClient().newBuilder().addInterceptor(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
                 Request request = chain.request()
                         .newBuilder()
-                        .header("Authorization", AccountManager.getInstance().getToken())
-                        .header("Content-Type", "application/json")
-                        .header("Platform", "01").build();
+                        .build();
                 return chain.proceed(request);
             }
         }).connectTimeout(Constants.DEFAULT_TIMEOUT, TimeUnit.SECONDS).build();
