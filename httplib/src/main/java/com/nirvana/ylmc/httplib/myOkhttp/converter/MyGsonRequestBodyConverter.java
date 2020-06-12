@@ -38,18 +38,18 @@ public class MyGsonRequestBodyConverter<T> implements Converter<T, RequestBody> 
         Buffer buffer = new Buffer();
         Writer writer = new OutputStreamWriter(buffer.outputStream(), UTF_8);
         JsonWriter jsonWriter = gson.newJsonWriter(writer);
-        if (value instanceof BaseBody) {//统一给body参数添加通用参数
-            try {
-                value.getClass().getMethod("setPlatform", String.class).invoke(value, "01");
-                value.getClass().getMethod("setVersion", String.class).invoke(value, "001");
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
+//        if (value instanceof BaseBody) {//统一给body参数添加通用参数
+//            try {
+//                value.getClass().getMethod("setPlatform", String.class).invoke(value, "01");
+//                value.getClass().getMethod("setVersion", String.class).invoke(value, "001");
+//            } catch (NoSuchMethodException e) {
+//                e.printStackTrace();
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            } catch (InvocationTargetException e) {
+//                e.printStackTrace();
+//            }
+//        }
         adapter.write(jsonWriter, value);
         jsonWriter.close();
         return RequestBody.create(MEDIA_TYPE, buffer.readByteString());//将java其对象转换为json串

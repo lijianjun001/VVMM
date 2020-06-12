@@ -16,6 +16,7 @@ import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 import jetpack.zmkj.com.jetpack.CustomApplication;
 import jetpack.zmkj.com.jetpack.MyWork;
+import jetpack.zmkj.com.jetpack.http.UserEntity;
 
 public class MainViewModel extends ViewModel implements LoginListener {
 
@@ -31,9 +32,9 @@ public class MainViewModel extends ViewModel implements LoginListener {
         userList = new LivePagedListBuilder<>(userFactory, 10).build();
     }
 
-    private MutableLiveData<User> userMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<UserEntity> userMutableLiveData = new MutableLiveData<>();
 
-    public MutableLiveData<User> getUserMutableLiveData() {
+    public MutableLiveData<UserEntity> getUserMutableLiveData() {
         return userMutableLiveData;
     }
 
@@ -58,7 +59,7 @@ public class MainViewModel extends ViewModel implements LoginListener {
     }
 
     @Override
-    public void onSuccess(User user) {//登陆成功回调
+    public void onSuccess(UserEntity user) {//登陆成功回调
         userMutableLiveData.postValue(user);//使用MutableLiveData,使model和view解耦
     }
 

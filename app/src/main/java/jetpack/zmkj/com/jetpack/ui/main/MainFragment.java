@@ -1,34 +1,30 @@
 package jetpack.zmkj.com.jetpack.ui.main;
 
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.paging.PagedList;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.work.Operation;
-import jetpack.zmkj.com.jetpack.MyService;
 import jetpack.zmkj.com.jetpack.R;
+import jetpack.zmkj.com.jetpack.http.UserEntity;
+import okhttp3.OkHttpClient;
 
 public class MainFragment extends Fragment {
 
     private MainViewModel mViewModel;
 
 
-    private TextView loginTv1;
-    private TextView nameTv1;
-    private TextView nameTv2;
-    private RecyclerView recyclerView;
+    private TextView loginTv;
+    private TextView getVCodeTv;
+
+    private EditText nameEt, vCodeEt;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -39,25 +35,11 @@ public class MainFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.main_fragment, container, false);
-        loginTv1 = view.findViewById(R.id.login_tv);
-        nameTv1 = view.findViewById(R.id.first_name_tv);
-        nameTv2 = view.findViewById(R.id.last_name_tv);
-        loginTv1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                mViewModel.login("11111", "11111");
-                mViewModel.startWork().observe(getViewLifecycleOwner(), new Observer<Operation.State>() {
-                    @RequiresApi(api = Build.VERSION_CODES.O)
-                    @Override
-                    public void onChanged(Operation.State state) {
 
-                        getActivity().startForegroundService(new Intent(getContext(), MyService.class));
-                    }
-                });
-            }
-        });
-        recyclerView = view.findViewById(R.id.recyclerView);
-
+        nameEt = view.findViewById(R.id.name_et);
+        vCodeEt = view.findViewById(R.id.v_code_et);
+        getVCodeTv = view.findViewById(R.id.get_v_code_tv);
+        loginTv = view.findViewById(R.id.login_tv);
         return view;
     }
 
@@ -65,22 +47,19 @@ public class MainFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-
-        mViewModel.getUserMutableLiveData().observe(this.getViewLifecycleOwner(), new Observer<User>() {
+        loginTv.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onChanged(@Nullable User user) {
-                nameTv1.setText(user.getFirstName());
-                nameTv2.setText(user.getLastName());
-            }
-        });//绑定数据，view不和model直接交互，通过viewModel交互
-        final UserAdapter userAdapter = new UserAdapter();
-        mViewModel.userList.observe(this, new Observer<PagedList<User>>() {
-            @Override
-            public void onChanged(PagedList<User> users) {
-                userAdapter.submitList(users);
+            public void onClick(View v) {
+                mViewModel.login(nameEt.getText().toString(), vCodeEt.getText().toString());
             }
         });
-        recyclerView.setAdapter(userAdapter);
+
+        mViewModel.getUserMutableLiveData().observe(this.getViewLifecycleOwner(), new Observer<UserEntity>() {
+            @Override
+            public void onChanged(@Nullable UserEntity user) {
+
+            }
+        });//绑定数据，view不和model直接交互，通过viewModel交互
 
     }
 

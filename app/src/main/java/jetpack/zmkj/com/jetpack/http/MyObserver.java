@@ -25,8 +25,8 @@ public abstract class MyObserver<T> implements Observer<T> {
         Type genType = getClass().getGenericSuperclass();
         Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
         Log.e(params[0].toString(), e.toString());
-        if (e instanceof ApiException){
-            if (((ApiException) e).getErrorCode()==-1){//重新登录
+        if (e instanceof ApiException) {
+            if (((ApiException) e).getErrorCode().equals("")) {//重新登录
 
             }
         }

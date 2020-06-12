@@ -3,11 +3,14 @@ package jetpack.zmkj.com.jetpack;
 import com.nirvana.ylmc.httplib.myOkhttp.converter.MyGsonConverterFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
-
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -27,14 +30,21 @@ public class RetrofitCreator {
         return retrofit;
     }
 
+    private static final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
+
     private static OkHttpClient configClient() {
-        HostnameVerifier hv = new HostnameVerifier() {
+        OkHttpClient okHttpClient = new OkHttpClient().newBuilder().cookieJar(new CookieJar() {
             @Override
-            public boolean verify(String hostname, SSLSession session) {
-                return hostname.matches("\\S*emubao.com");
+            public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+                cookieStore.put(url.host(), cookies);
             }
-        };
-        OkHttpClient okHttpClient = new OkHttpClient().newBuilder().hostnameVerifier(hv).addInterceptor(new Interceptor() {
+
+            @Override
+            public List<Cookie> loadForRequest(HttpUrl url) {
+                List<Cookie> cookies = cookieStore.get(url.host());
+                return cookies != null ? cookies : new ArrayList<Cookie>();
+            }
+        }).addInterceptor(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
                 Request request = chain.request()

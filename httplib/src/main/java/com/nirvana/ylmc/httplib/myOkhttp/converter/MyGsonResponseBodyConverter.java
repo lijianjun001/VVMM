@@ -45,9 +45,9 @@ public class MyGsonResponseBodyConverter<T> implements Converter<ResponseBody, T
         ResultModel<String> re = mGson.fromJson(response, ResultModel.class);
         //响应码中负数的情况，一律抛出ApiException异常。
         //这样，我们就成功的将该异常交给Observer的onError()去处理了。
-        if (re.getCode() < 0) {
+        if (re.getSucceed() != 0) {
             value.close();
-            throw new ApiException(re.getCode(), re.getMessage());
+            throw new ApiException(re.getReturnCode(), re.getReturnMsg());
         }
         MediaType mediaType = value.contentType();
         Charset charset = mediaType != null ? mediaType.charset(UTF_8) : UTF_8;

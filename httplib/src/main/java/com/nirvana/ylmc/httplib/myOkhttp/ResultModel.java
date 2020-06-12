@@ -1,32 +1,44 @@
 package com.nirvana.ylmc.httplib.myOkhttp;
 
-public class ResultModel<D> {
-    private int code;//0或者10086成功其他失败
-    private String message;//错误信息
-    private D data;//成功返回的数据
+public class ResultModel<T> {
 
-    public int getCode() {
-        return code;
+
+
+
+    private T datas;
+    private String returnCode;
+    private String returnMsg;
+    private int succeed;
+
+    public T getDatas() {
+        return datas;
     }
 
-    public void setCode(int code) {
-        this.code = code;
+    public void setDatas(T datas) {
+        this.datas = datas;
     }
 
-    public String getMessage() {
-        return message;
+    public String getReturnCode() {
+        return returnCode;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setReturnCode(String returnCode) {
+        this.returnCode = returnCode;
     }
 
-    public D getData() {
-        return data;
+    public String getReturnMsg() {
+        return returnMsg;
     }
 
-    public void setData(D data) {
-        this.data = data;
+    public void setReturnMsg(String returnMsg) {
+        this.returnMsg = returnMsg;
     }
 
+    public int getSucceed() {
+        return succeed;
+    }
+
+    public void setSucceed(int succeed) {
+        this.succeed = succeed;
+    }
 }

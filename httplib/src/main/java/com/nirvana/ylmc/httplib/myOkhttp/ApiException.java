@@ -5,14 +5,14 @@ package com.nirvana.ylmc.httplib.myOkhttp;
  */
 
 public class ApiException extends RuntimeException {
-    private int errorCode;
+    private String errorCode;
 
-    public ApiException(int code, String msg) {
+    public ApiException(String code, String msg) {
         super(msg);
         this.errorCode = code;
     }
 
-    public int getErrorCode() {
+    public String getErrorCode() {
         return errorCode;
     }
 
