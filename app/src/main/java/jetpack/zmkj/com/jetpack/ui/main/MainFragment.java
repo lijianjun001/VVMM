@@ -14,7 +14,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import jetpack.zmkj.com.jetpack.R;
 import jetpack.zmkj.com.jetpack.http.UserEntity;
-import okhttp3.OkHttpClient;
 
 public class MainFragment extends Fragment {
 
@@ -23,6 +22,7 @@ public class MainFragment extends Fragment {
 
     private TextView loginTv;
     private TextView getVCodeTv;
+    private TextView get_goods_tv;
 
     private EditText nameEt, vCodeEt;
 
@@ -40,6 +40,7 @@ public class MainFragment extends Fragment {
         vCodeEt = view.findViewById(R.id.v_code_et);
         getVCodeTv = view.findViewById(R.id.get_v_code_tv);
         loginTv = view.findViewById(R.id.login_tv);
+        get_goods_tv = view.findViewById(R.id.get_goods_tv);
         return view;
     }
 
@@ -61,6 +62,21 @@ public class MainFragment extends Fragment {
             }
         });//绑定数据，view不和model直接交互，通过viewModel交互
 
+        getVCodeTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewModel.getVCode(nameEt.getText().toString());
+            }
+        });
+
+        get_goods_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewModel.getGoods(nameEt.getText().toString());
+            }
+        });
+
     }
+
 
 }

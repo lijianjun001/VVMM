@@ -44,6 +44,14 @@ public class MainViewModel extends ViewModel implements LoginListener {
         userModel.login(username, password, this);
     }
 
+    public void getVCode(String telephone) {
+        userModel.getVCode(telephone);
+    }
+
+    public void getGoods(String telephone) {
+        userModel.getGoods("");
+    }
+
     /**
      * workmanager 条件满足时候执行 或者 app重新启动时候执行，app杀死后，work也不会执行，网上说的有问题，亲自测试多次
      */

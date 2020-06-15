@@ -11,18 +11,21 @@ import rx.Observable;
 
 public interface CustomerService {
 
-    @POST("/PC1307")
+    @POST("PC1307")
+    @FormUrlEncoded
     Observable<User> createOrder(@Field("buyingDetail") BuyingDetailModel buyingDetailModel, @Field("addressId") String addressId,
                                  @Field("invoiceId") String invoiceId, @Field("teaCouponId") String teaCouponId,
                                  @Field("type") String type, @Field("uid") String uid, @Field("sid") String sid);
 
-    @POST("/PC0301")
-    Observable<User> getGoods(@Field("uid") String uid, @Field("sid") String sid);
+    @POST("PC0301")
+    @FormUrlEncoded
+    Observable<Normalgoods> getGoods(@Field("uid") String uid, @Field("sid") String sid);
 
-    @POST("/PC0102")
-    Observable<User> getVCode(@Field("mobile") String mobile, @Field("type") String type);
+    @POST("PC0102")
+    @FormUrlEncoded
+    Observable<String> getVCode(@Field("mobile") String mobile, @Field("type") String type);
 
-    @POST("/PC0106")
+    @POST("PC0106")
     @FormUrlEncoded
     Observable<ResultModel<UserEntity>> vCodeLogin(@Field("mobile") String mobile, @Field("code") String code);
 
