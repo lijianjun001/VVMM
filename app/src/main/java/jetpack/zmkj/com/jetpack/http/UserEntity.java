@@ -5,7 +5,7 @@ public class UserEntity {
     private GoodImgModel user;
     private String certificationStatus;
     private long createTime;
-    private boolean gender;
+    private int gender;
     private String mobile;
     private String name;
     private int type;
@@ -35,11 +35,11 @@ public class UserEntity {
         this.createTime = createTime;
     }
 
-    public boolean isGender() {
+    public int getGender() {
         return gender;
     }
 
-    public void setGender(boolean gender) {
+    public void setGender(int gender) {
         this.gender = gender;
     }
 

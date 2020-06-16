@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import jetpack.zmkj.com.jetpack.R;
-import jetpack.zmkj.com.jetpack.http.UserEntity;
+import jetpack.zmkj.com.jetpack.http.LoginModel;
 
 public class MainFragment extends Fragment {
 
@@ -23,6 +23,8 @@ public class MainFragment extends Fragment {
     private TextView loginTv;
     private TextView getVCodeTv;
     private TextView get_goods_tv;
+    private TextView get_goods_detail_tv;
+    private TextView createOrderTv;
 
     private EditText nameEt, vCodeEt;
 
@@ -41,6 +43,8 @@ public class MainFragment extends Fragment {
         getVCodeTv = view.findViewById(R.id.get_v_code_tv);
         loginTv = view.findViewById(R.id.login_tv);
         get_goods_tv = view.findViewById(R.id.get_goods_tv);
+        get_goods_detail_tv = view.findViewById(R.id.get_goods_detail_tv);
+        createOrderTv = view.findViewById(R.id.create_order_tv);
         return view;
     }
 
@@ -51,13 +55,13 @@ public class MainFragment extends Fragment {
         loginTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewModel.login(nameEt.getText().toString(), vCodeEt.getText().toString());
+                mViewModel.login("13260213625", "G20W1auq/PLzs8Py");
             }
         });
 
-        mViewModel.getUserMutableLiveData().observe(this.getViewLifecycleOwner(), new Observer<UserEntity>() {
+        mViewModel.getUserMutableLiveData().observe(this.getViewLifecycleOwner(), new Observer<LoginModel>() {
             @Override
-            public void onChanged(@Nullable UserEntity user) {
+            public void onChanged(@Nullable LoginModel loginModel) {
 
             }
         });//绑定数据，view不和model直接交互，通过viewModel交互
@@ -72,7 +76,23 @@ public class MainFragment extends Fragment {
         get_goods_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewModel.getGoods(nameEt.getText().toString());
+                mViewModel.getGoods();
+            }
+        });
+
+        get_goods_detail_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mViewModel.getGoodsDetail();
+            }
+        });
+
+        createOrderTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mViewModel.getGoodsDetail();
             }
         });
 

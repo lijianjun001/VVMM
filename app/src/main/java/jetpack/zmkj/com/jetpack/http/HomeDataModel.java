@@ -1,13 +1,23 @@
 package jetpack.zmkj.com.jetpack.http;
 
-import java.util.List;
-
 public class HomeDataModel {
-    private List<Banner>banner;
-    private List<CategoryModel>category;
-    private NewGoodsModel newgoods;
-    private Normalgoods normalgoods;
+    private HomeDataEntity homeData;
     private int userType;
 
 
+    public HomeDataEntity getHomeData() {
+        return homeData;
+    }
+
+    public void setHomeData(HomeDataEntity homeData) {
+        this.homeData = homeData;
+    }
+
+    public int getUserType() {
+        return userType;
+    }
+
+    public void setUserType(int userType) {
+        this.userType = userType;
+    }
 }

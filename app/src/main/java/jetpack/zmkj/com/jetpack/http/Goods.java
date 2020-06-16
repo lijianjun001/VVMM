@@ -1,30 +1,30 @@
 package jetpack.zmkj.com.jetpack.http;
 
 public class Goods {
-    private String coinState;
-    private String gcPrice;
+    private int coinState;
+    private double gcPrice;
     private String id;
     private GoodImgModel img;
-    private boolean isAllProductDown;
-    private boolean isOpenUPVas;
+    private int isAllProductDown;
+    private int isOpenUPVas;
     private String name;
     private double ncPrice;
     private String param;
     private String subTitle;
 
-    public String getCoinState() {
+    public int getCoinState() {
         return coinState;
     }
 
-    public void setCoinState(String coinState) {
+    public void setCoinState(int coinState) {
         this.coinState = coinState;
     }
 
-    public String getGcPrice() {
+    public double getGcPrice() {
         return gcPrice;
     }
 
-    public void setGcPrice(String gcPrice) {
+    public void setGcPrice(double gcPrice) {
         this.gcPrice = gcPrice;
     }
 
@@ -44,20 +44,20 @@ public class Goods {
         this.img = img;
     }
 
-    public boolean isAllProductDown() {
+    public int getIsAllProductDown() {
         return isAllProductDown;
     }
 
-    public void setAllProductDown(boolean allProductDown) {
-        isAllProductDown = allProductDown;
+    public void setIsAllProductDown(int isAllProductDown) {
+        this.isAllProductDown = isAllProductDown;
     }
 
-    public boolean isOpenUPVas() {
+    public int getIsOpenUPVas() {
         return isOpenUPVas;
     }
 
-    public void setOpenUPVas(boolean openUPVas) {
-        isOpenUPVas = openUPVas;
+    public void setIsOpenUPVas(int isOpenUPVas) {
+        this.isOpenUPVas = isOpenUPVas;
     }
 
     public String getName() {

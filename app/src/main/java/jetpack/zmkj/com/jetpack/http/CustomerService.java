@@ -19,7 +19,11 @@ public interface CustomerService {
 
     @POST("PC0301")
     @FormUrlEncoded
-    Observable<Normalgoods> getGoods(@Field("uid") String uid, @Field("sid") String sid);
+    Observable<ResultModel<HomeDataModel>> getGoods(@Field("uid") String uid, @Field("sid") String sid);
+
+    @POST("PC0402/")
+    @FormUrlEncoded
+    Observable<ResultModel<GoodsDetail>> getGoodsDetail(@Field("uid") String uid, @Field("sid") String sid, @Field("goodsId") String goodsId);
 
     @POST("PC0102")
     @FormUrlEncoded
@@ -32,9 +36,7 @@ public interface CustomerService {
 
     @POST("PC0105")
     @FormUrlEncoded
-    Observable<ResultModel<UserEntity>> login(@Field("mobile") String mobile, @Field("password") String password);
-
-
+    Observable<ResultModel<LoginModel>> login(@Field("mobile") String mobile, @Field("password") String password);
 
 
 }

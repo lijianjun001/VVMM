@@ -8,19 +8,11 @@ import com.nirvana.ylmc.httplib.myOkhttp.RxSchedulerHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.IOException;
-
-import jetpack.zmkj.com.jetpack.Constants;
 import jetpack.zmkj.com.jetpack.http.CustomerService;
+import jetpack.zmkj.com.jetpack.http.GoodsDetail;
+import jetpack.zmkj.com.jetpack.http.HomeDataModel;
+import jetpack.zmkj.com.jetpack.http.LoginModel;
 import jetpack.zmkj.com.jetpack.http.MyObserver;
-import jetpack.zmkj.com.jetpack.http.Normalgoods;
-import jetpack.zmkj.com.jetpack.http.UserEntity;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class UserModel extends BaseModel implements IUserModel {
 
@@ -34,21 +26,21 @@ public class UserModel extends BaseModel implements IUserModel {
 
 
         mRxManager.add(customerService.login(username, password)
-                .compose(RxSchedulerHelper.<ResultModel<UserEntity>>io_main())
-                .subscribe(new MyObserver<ResultModel<UserEntity>>() {
+                .compose(RxSchedulerHelper.<ResultModel<LoginModel>>io_main())
+                .subscribe(new MyObserver<ResultModel<LoginModel>>() {
                     @Override
                     public void onCompleted() {
-
+                        Log.e("LoginModel", "onCompleted");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        Log.e("LoginModel", e.getMessage());
                     }
 
                     @Override
-                    public void onNext(ResultModel<UserEntity> user) {
-                        loginListener.onSuccess(user.getDatas());
+                    public void onNext(ResultModel<LoginModel> loginModelResultModel) {
+                        loginListener.onSuccess(loginModelResultModel.getDatas());
                     }
                 }));
     }
@@ -89,14 +81,25 @@ public class UserModel extends BaseModel implements IUserModel {
         });
     }
 
-    public void getGoods(String telephone) {
-        customerService.getGoods("1271249144307900417", "69b2d525297b424cb34264234ffcf5dd").compose(RxSchedulerHelper.<Normalgoods>io_main()).subscribe(new MyObserver<Normalgoods>() {
+    public void getGoods(String uid, String sid) {
+        customerService.getGoods(uid, sid).compose(RxSchedulerHelper.<ResultModel<HomeDataModel>>io_main()).subscribe(new MyObserver<ResultModel<HomeDataModel>>() {
 
             @Override
-            public void onNext(Normalgoods s) {
+            public void onNext(ResultModel<HomeDataModel> homeDataModel) {
 
+                EventBus.getDefault().post(homeDataModel.getDatas());
+            }
 
-                EventBus.getDefault().post(s);
+        });
+    }
+
+    public void getGoodsDetail(String uid, String sid, String goodsId) {
+        customerService.getGoodsDetail(uid, sid, goodsId).compose(RxSchedulerHelper.<ResultModel<GoodsDetail>>io_main()).subscribe(new MyObserver<ResultModel<GoodsDetail>>() {
+
+            @Override
+            public void onNext(ResultModel<GoodsDetail> goodsDetail) {
+
+                EventBus.getDefault().post(goodsDetail.getDatas());
             }
 
         });

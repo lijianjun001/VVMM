@@ -1,10 +1,6 @@
 package com.nirvana.ylmc.httplib.myOkhttp;
 
 public class ResultModel<T> {
-
-
-
-
     private T datas;
     private String returnCode;
     private String returnMsg;
