@@ -4,8 +4,7 @@ import java.util.List;
 
 public class SpecModel {
 
-    private List<SpecEntity>spec;
-    private String subTitle;
+    private List<SpecEntity> spec;
 
     public List<SpecEntity> getSpec() {
         return spec;
@@ -15,11 +14,4 @@ public class SpecModel {
         this.spec = spec;
     }
 
-    public String getSubTitle() {
-        return subTitle;
-    }
-
-    public void setSubTitle(String subTitle) {
-        this.subTitle = subTitle;
-    }
 }

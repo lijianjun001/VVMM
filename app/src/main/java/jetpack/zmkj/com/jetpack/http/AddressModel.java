@@ -7,7 +7,7 @@ public class AddressModel {
     private String city;
     private String cityCode;
     private String id;
-    private boolean isDefault;
+    private int isDefault;
     private String mobile;
     private String name;
     private String province;
@@ -61,12 +61,12 @@ public class AddressModel {
         this.id = id;
     }
 
-    public boolean isDefault() {
+    public int getIsDefault() {
         return isDefault;
     }
 
-    public void setDefault(boolean aDefault) {
-        isDefault = aDefault;
+    public void setIsDefault(int isDefault) {
+        this.isDefault = isDefault;
     }
 
     public String getMobile() {

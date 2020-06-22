@@ -2,17 +2,28 @@ package jetpack.zmkj.com.jetpack.ui.main;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.nirvana.ylmc.httplib.myOkhttp.HttpServiceAnnotation;
 import com.nirvana.ylmc.httplib.myOkhttp.ResultModel;
 import com.nirvana.ylmc.httplib.myOkhttp.RxSchedulerHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.List;
+
+import jetpack.zmkj.com.jetpack.http.AddressListModel;
+import jetpack.zmkj.com.jetpack.http.AddressModel;
+import jetpack.zmkj.com.jetpack.http.BuyIngDetailVoModel;
+import jetpack.zmkj.com.jetpack.http.BuyingDetailModel;
+import jetpack.zmkj.com.jetpack.http.CouponEntity;
+import jetpack.zmkj.com.jetpack.http.CouponModel;
+import jetpack.zmkj.com.jetpack.http.CreateOrderModel;
 import jetpack.zmkj.com.jetpack.http.CustomerService;
 import jetpack.zmkj.com.jetpack.http.GoodsDetail;
 import jetpack.zmkj.com.jetpack.http.HomeDataModel;
 import jetpack.zmkj.com.jetpack.http.LoginModel;
 import jetpack.zmkj.com.jetpack.http.MyObserver;
+import jetpack.zmkj.com.jetpack.http.OrderGoodModel;
 
 public class UserModel extends BaseModel implements IUserModel {
 
@@ -105,4 +116,70 @@ public class UserModel extends BaseModel implements IUserModel {
         });
     }
 
+
+    public void getAddress(String uid, String sid) {
+
+
+        customerService.getAddress(uid, sid).compose(RxSchedulerHelper.<ResultModel<AddressListModel>>io_main()).subscribe(new MyObserver<ResultModel<AddressListModel>>() {
+
+            @Override
+            public void onNext(ResultModel<AddressListModel> goodsDetail) {
+
+                EventBus.getDefault().post(goodsDetail.getDatas());
+            }
+
+        });
+    }
+
+
+    public void preCreateOrder(String productId, int number, String uid, String sid) {
+        customerService.preCreateOrder(productId, number, uid, sid).compose(RxSchedulerHelper.<ResultModel<BuyIngDetailVoModel>>io_main()).subscribe(new MyObserver<ResultModel<BuyIngDetailVoModel>>() {
+            @Override
+            public void onNext(ResultModel<BuyIngDetailVoModel> buyIngDetailVoModelResultModel) {
+
+                EventBus.getDefault().post(buyIngDetailVoModelResultModel.getDatas());
+            }
+        });
+    }
+
+    public void getCouponList(List<OrderGoodModel> goods, String uid, String sid) {
+
+
+        customerService.getCouponList(new Gson().toJson(goods), uid, sid).compose(RxSchedulerHelper.<ResultModel<CouponModel>>io_main()).subscribe(new MyObserver<ResultModel<CouponModel>>() {
+            @Override
+            public void onNext(ResultModel<CouponModel> listResultModel) {
+                EventBus.getDefault().post(listResultModel.getDatas());
+            }
+        });
+    }
+
+    /**
+     * @param addressModel
+     * @param goods
+     * @param addressId
+     * @param invoiceId    发票
+     * @param uid
+     * @param sid
+     */
+    public void createOrder(AddressModel addressModel, List<OrderGoodModel> goods, float freight, double totalFee, String addressId, String invoiceId, String teaCouponId, String type, String uid, String sid) {
+
+        BuyingDetailModel buyingDetailModel = new BuyingDetailModel();
+        buyingDetailModel.setAddresses(addressModel);
+        buyingDetailModel.setFreight(freight);//运费
+        buyingDetailModel.setFreightContent("");
+        buyingDetailModel.setGoods(goods);
+        buyingDetailModel.setInvoice(false);
+        buyingDetailModel.setRemark("");//备注信息
+        buyingDetailModel.setTotalFee(totalFee);
+
+        customerService.createOrder(new Gson().toJson(buyingDetailModel), addressId, invoiceId, teaCouponId, type, uid, sid).compose(RxSchedulerHelper.<ResultModel<CreateOrderModel>>io_main()).subscribe(new MyObserver<ResultModel<CreateOrderModel>>() {
+
+            @Override
+            public void onNext(ResultModel<CreateOrderModel> booleanResultModel) {
+
+
+            }
+
+        });
+    }
 }

@@ -24,7 +24,10 @@ public class MainFragment extends Fragment {
     private TextView getVCodeTv;
     private TextView get_goods_tv;
     private TextView get_goods_detail_tv;
+    private TextView get_address_tv;
     private TextView createOrderTv;
+    private TextView pre_create_order_tv;
+    private TextView pre_create_coupon_tv;
 
     private EditText nameEt, vCodeEt;
 
@@ -44,7 +47,10 @@ public class MainFragment extends Fragment {
         loginTv = view.findViewById(R.id.login_tv);
         get_goods_tv = view.findViewById(R.id.get_goods_tv);
         get_goods_detail_tv = view.findViewById(R.id.get_goods_detail_tv);
+        get_address_tv = view.findViewById(R.id.get_address_tv);
+        pre_create_order_tv = view.findViewById(R.id.pre_create_order_tv);
         createOrderTv = view.findViewById(R.id.create_order_tv);
+        pre_create_coupon_tv = view.findViewById(R.id.pre_create_coupon_tv);
         return view;
     }
 
@@ -87,12 +93,34 @@ public class MainFragment extends Fragment {
                 mViewModel.getGoodsDetail();
             }
         });
+        get_address_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                mViewModel.getAddress();
+            }
+        });
+
+        pre_create_order_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mViewModel.preCreateOrder();
+            }
+        });
+
+        pre_create_coupon_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mViewModel.getCoupon();
+            }
+        });
         createOrderTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                mViewModel.getGoodsDetail();
+                mViewModel.createOrder();
             }
         });
 

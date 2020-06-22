@@ -15,7 +15,7 @@ public class GoodsDetailEntity {
     private List<GoodImgModel> slideshow;
     private List<GoodImgModel> slideshowPC;
 
-    private List<SpecModel> spec;
+    private List<SpecEntity> spec;
     private String subTitle;
 
     public String getDetailHtml() {
@@ -90,11 +90,11 @@ public class GoodsDetailEntity {
         this.slideshowPC = slideshowPC;
     }
 
-    public List<SpecModel> getSpec() {
+    public List<SpecEntity> getSpec() {
         return spec;
     }
 
-    public void setSpec(List<SpecModel> spec) {
+    public void setSpec(List<SpecEntity> spec) {
         this.spec = spec;
     }
 

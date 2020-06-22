@@ -5,6 +5,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
@@ -22,6 +24,11 @@ import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 import jetpack.zmkj.com.jetpack.CustomApplication;
 import jetpack.zmkj.com.jetpack.MyWork;
+import jetpack.zmkj.com.jetpack.http.AddressListModel;
+import jetpack.zmkj.com.jetpack.http.BuyIngDetailVoEntity;
+import jetpack.zmkj.com.jetpack.http.BuyIngDetailVoModel;
+import jetpack.zmkj.com.jetpack.http.CouponEntity;
+import jetpack.zmkj.com.jetpack.http.CouponModel;
 import jetpack.zmkj.com.jetpack.http.GoodsDetail;
 import jetpack.zmkj.com.jetpack.http.HomeDataModel;
 import jetpack.zmkj.com.jetpack.http.LoginModel;
@@ -59,10 +66,39 @@ public class MainViewModel extends ViewModel implements LoginListener, Lifecycle
         userModel.getGoods(loginModel.getUser().getUid(), loginModel.getSid());
     }
 
+    public void createOrder() {
+        BuyIngDetailVoEntity buyIngDetailVoEntity = buyIngDetailVoModel.getBuyIngDetailVo();
+        LoginModel loginModel = userMutableLiveData.getValue();
+        String couponId = "";
+        List<CouponEntity>couponEntities=couponModel.getCouponList();
+        if (couponEntities != null && couponEntities.size() > 0) {
+            couponId = couponEntities.get(0).getId();
+        }
+        userModel.createOrder(buyIngDetailVoEntity.getAddresses(), buyIngDetailVoEntity.getGoods(), buyIngDetailVoEntity.getFreight(), buyIngDetailVoEntity.getTotalFee(), buyIngDetailVoEntity.getAddresses().getId(), null, couponId, "0", loginModel.getUser().getUid(), loginModel.getSid());
+    }
+
     public void getGoodsDetail() {
         LoginModel loginModel = userMutableLiveData.getValue();
 
         userModel.getGoodsDetail(loginModel.getUser().getUid(), loginModel.getSid(), homeDataModel.getHomeData().getBanner().get(0).getBizId());
+    }
+
+    public void getAddress() {
+        LoginModel loginModel = userMutableLiveData.getValue();
+
+        userModel.getAddress(loginModel.getUser().getUid(), loginModel.getSid());
+    }
+
+    public void preCreateOrder() {
+        LoginModel loginModel = userMutableLiveData.getValue();
+        userModel.preCreateOrder(goodsDetail.getGoodsDetail().getSpec().get(0).getRefPid(), 1, loginModel.getUser().getUid(), loginModel.getSid());
+    }
+
+    public void getCoupon() {
+        LoginModel loginModel = userMutableLiveData.getValue();
+        BuyIngDetailVoEntity buyIngDetailVoEntity = buyIngDetailVoModel.getBuyIngDetailVo();
+        userModel.getCouponList(buyIngDetailVoEntity.getGoods(), loginModel.getUser().getUid(), loginModel.getSid());
+
     }
 
     /**
@@ -99,6 +135,32 @@ public class MainViewModel extends ViewModel implements LoginListener, Lifecycle
     public void onResult(GoodsDetail goodsDetail) {
 
         this.goodsDetail = goodsDetail;
+    }
+
+    private AddressListModel addressListModel;
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onResult(AddressListModel addressListModel) {
+
+        this.addressListModel = addressListModel;
+    }
+
+
+    private BuyIngDetailVoModel buyIngDetailVoModel;
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onResult(BuyIngDetailVoModel buyIngDetailVoModel) {
+
+        this.buyIngDetailVoModel = buyIngDetailVoModel;
+    }
+
+
+    private CouponModel couponModel;
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onResult(CouponModel couponModel) {
+
+        this.couponModel = couponModel;
     }
 
     @Override
