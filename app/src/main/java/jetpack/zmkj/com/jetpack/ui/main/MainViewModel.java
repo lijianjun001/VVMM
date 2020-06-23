@@ -5,7 +5,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
@@ -27,7 +27,6 @@ import jetpack.zmkj.com.jetpack.MyWork;
 import jetpack.zmkj.com.jetpack.http.AddressListModel;
 import jetpack.zmkj.com.jetpack.http.BuyIngDetailVoEntity;
 import jetpack.zmkj.com.jetpack.http.BuyIngDetailVoModel;
-import jetpack.zmkj.com.jetpack.http.CouponEntity;
 import jetpack.zmkj.com.jetpack.http.CouponModel;
 import jetpack.zmkj.com.jetpack.http.GoodsDetail;
 import jetpack.zmkj.com.jetpack.http.HomeDataModel;
@@ -39,12 +38,14 @@ public class MainViewModel extends ViewModel implements LoginListener, Lifecycle
     private DataSource.Factory<Integer, User> userFactory =
             CustomApplication.getInstance().getAppDatabase().userDao().getUsers();
 
+
     public MainViewModel() {
         userModel = new UserModel();//如果以后更换请求方式，直接修改这个地方即可，
         EventBus.getDefault().register(this);
     }
 
     private MutableLiveData<LoginModel> userMutableLiveData = new MutableLiveData<>();
+
 
     public MutableLiveData<LoginModel> getUserMutableLiveData() {
         return userMutableLiveData;
@@ -53,7 +54,7 @@ public class MainViewModel extends ViewModel implements LoginListener, Lifecycle
 
     public void login(String username, String password) {
 
-        userModel.login(username, password, this);
+        userModel.login(username, password);
     }
 
     public void getVCode(String telephone) {
@@ -66,16 +67,6 @@ public class MainViewModel extends ViewModel implements LoginListener, Lifecycle
         userModel.getGoods(loginModel.getUser().getUid(), loginModel.getSid());
     }
 
-    public void createOrder() {
-        BuyIngDetailVoEntity buyIngDetailVoEntity = buyIngDetailVoModel.getBuyIngDetailVo();
-        LoginModel loginModel = userMutableLiveData.getValue();
-        String couponId = "";
-        List<CouponEntity>couponEntities=couponModel.getCouponList();
-        if (couponEntities != null && couponEntities.size() > 0) {
-            couponId = couponEntities.get(0).getId();
-        }
-        userModel.createOrder(buyIngDetailVoEntity.getAddresses(), buyIngDetailVoEntity.getGoods(), buyIngDetailVoEntity.getFreight(), buyIngDetailVoEntity.getTotalFee(), buyIngDetailVoEntity.getAddresses().getId(), null, couponId, "0", loginModel.getUser().getUid(), loginModel.getSid());
-    }
 
     public void getGoodsDetail() {
         LoginModel loginModel = userMutableLiveData.getValue();
@@ -99,6 +90,20 @@ public class MainViewModel extends ViewModel implements LoginListener, Lifecycle
         BuyIngDetailVoEntity buyIngDetailVoEntity = buyIngDetailVoModel.getBuyIngDetailVo();
         userModel.getCouponList(buyIngDetailVoEntity.getGoods(), loginModel.getUser().getUid(), loginModel.getSid());
 
+    }
+
+    public void createOrder() {
+//        BuyIngDetailVoEntity buyIngDetailVoEntity = buyIngDetailVoModel.getBuyIngDetailVo();
+//        LoginModel loginModel = userMutableLiveData.getValue();
+//        String couponId = "";
+//        List<CouponEntity> couponEntities = couponModel.getCouponList();
+//        if (couponEntities != null && couponEntities.size() > 0) {
+//            couponId = couponEntities.get(0).getId();
+//        }
+        for (Map.Entry<String, CreateOrderModel2> entry : UserModel.createOrderModel2HashMap.entrySet()) {
+            CreateOrderModel2 createOrderModel2 = entry.getValue();
+            userModel.createOrder(createOrderModel2.getAddressModel(), createOrderModel2.getGoods(), createOrderModel2.getFreight(), createOrderModel2.getTotalFee(), createOrderModel2.getAddressId(), null, createOrderModel2.getTeaCouponId(), "0", createOrderModel2.getUid(), createOrderModel2.getSid());
+        }
     }
 
     /**
@@ -176,4 +181,11 @@ public class MainViewModel extends ViewModel implements LoginListener, Lifecycle
             EventBus.getDefault().unregister(this);
         }
     }
+
+
+    public void preCreatOrder() {
+
+
+    }
+
 }

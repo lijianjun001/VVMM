@@ -1,11 +1,17 @@
 package jetpack.zmkj.com.jetpack.ui.main;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +36,8 @@ public class MainFragment extends Fragment {
     private TextView pre_create_coupon_tv;
 
     private EditText nameEt, vCodeEt;
+
+    private Map<String, String> user = new HashMap<>();
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -58,10 +66,30 @@ public class MainFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
+        Date date = new Date();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR, 10);
+
+        long delay = calendar.getTimeInMillis() - date.getTime();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mViewModel.createOrder();
+            }
+        }, delay);
+
+        user.put("13260213625", "G20W1auq/PLzs8Py");
+
         loginTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewModel.login("13260213625", "G20W1auq/PLzs8Py");
+                for (Map.Entry<String, String> entry : user.entrySet()) {
+                    mViewModel.login(entry.getKey(), entry.getValue());
+                }
+
             }
         });
 

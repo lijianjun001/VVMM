@@ -9,6 +9,7 @@ import com.nirvana.ylmc.httplib.myOkhttp.RxSchedulerHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.HashMap;
 import java.util.List;
 
 import jetpack.zmkj.com.jetpack.http.AddressListModel;
@@ -24,17 +25,21 @@ import jetpack.zmkj.com.jetpack.http.HomeDataModel;
 import jetpack.zmkj.com.jetpack.http.LoginModel;
 import jetpack.zmkj.com.jetpack.http.MyObserver;
 import jetpack.zmkj.com.jetpack.http.OrderGoodModel;
+import rx.Observable;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
-public class UserModel extends BaseModel implements IUserModel {
+public class UserModel extends BaseModel {
 
 
     @HttpServiceAnnotation
     private CustomerService customerService;
 
 
-    @Override
-    public void login(String username, String password, final LoginListener loginListener) {
+    public static HashMap<String, CreateOrderModel2> createOrderModel2HashMap = new HashMap<>();
 
+
+    public void login(String username, String password) {
 
         mRxManager.add(customerService.login(username, password)
                 .compose(RxSchedulerHelper.<ResultModel<LoginModel>>io_main())
@@ -51,9 +56,18 @@ public class UserModel extends BaseModel implements IUserModel {
 
                     @Override
                     public void onNext(ResultModel<LoginModel> loginModelResultModel) {
-                        loginListener.onSuccess(loginModelResultModel.getDatas());
+
+                        CreateOrderModel2 createOrderModel2 = new CreateOrderModel2();
+                        String uid = loginModelResultModel.getDatas().getUser().getUid();
+                        createOrderModel2.setUid(uid);
+                        createOrderModel2.setSid(loginModelResultModel.getDatas().getSid());
+                        createOrderModel2HashMap.put(uid, createOrderModel2);
+                        preCreateOrder(loginModelResultModel.getDatas());
+                        EventBus.getDefault().post(loginModelResultModel.getDatas());
                     }
                 }));
+
+
     }
 
 
@@ -182,4 +196,72 @@ public class UserModel extends BaseModel implements IUserModel {
 
         });
     }
+
+
+    public void preCreateOrder(LoginModel loginModel) {
+
+
+        final String uid = loginModel.getUser().getUid();
+        final String sid = loginModel.getSid();
+        Observable goodsOb = customerService.getGoods(uid, sid);
+
+        final CreateOrderModel2 createOrderModel2 = createOrderModel2HashMap.get(uid);
+
+        customerService.getAddress(uid, sid).compose(RxSchedulerHelper.<ResultModel<AddressListModel>>io_main()).subscribe(new MyObserver<ResultModel<AddressListModel>>() {
+
+            @Override
+            public void onNext(ResultModel<AddressListModel> addressListModelResultModel) {
+
+                createOrderModel2.setAddressModel(addressListModelResultModel.getDatas().getAddresses().get(0));
+                createOrderModel2.setAddressId(addressListModelResultModel.getDatas().getAddresses().get(0).getId());
+            }
+
+        });
+
+        goodsOb.flatMap(new Func1<ResultModel<HomeDataModel>, Observable<ResultModel<GoodsDetail>>>() {
+
+            @Override
+            public Observable<ResultModel<GoodsDetail>> call(ResultModel<HomeDataModel> homeDataModelResultModel) {
+                String goodsId = homeDataModelResultModel.getDatas().getHomeData().getBanner().get(0).getBizId();
+                return customerService.getGoodsDetail(uid, sid, goodsId);
+            }
+        }).subscribeOn(Schedulers.io()).flatMap(new Func1<ResultModel<GoodsDetail>, Observable<ResultModel<BuyIngDetailVoModel>>>() {
+
+            @Override
+            public Observable<ResultModel<BuyIngDetailVoModel>> call(ResultModel<GoodsDetail> goodsDetailResultModel) {
+                GoodsDetail goodsDetail = goodsDetailResultModel.getDatas();
+                String productId = goodsDetail.getGoodsDetail().getSpec().get(0).getRefPid();
+
+                return customerService.preCreateOrder(productId, 1, uid, sid);
+            }
+        }).flatMap(new Func1<ResultModel<BuyIngDetailVoModel>, Observable<ResultModel<CouponModel>>>() {
+
+            @Override
+            public Observable<ResultModel<CouponModel>> call(ResultModel<BuyIngDetailVoModel> buyIngDetailVoModelResultModel) {
+                BuyIngDetailVoModel buyIngDetailVoModel = buyIngDetailVoModelResultModel.getDatas();
+                List<OrderGoodModel> orderGoodModels = buyIngDetailVoModel.getBuyIngDetailVo().getGoods();
+
+                createOrderModel2.setFreight(buyIngDetailVoModel.getBuyIngDetailVo().getFreight());
+                createOrderModel2.setGoods(orderGoodModels);
+                createOrderModel2.setTotalFee(buyIngDetailVoModel.getBuyIngDetailVo().getTotalFee());
+                createOrderModel2.setType("0");
+
+                return customerService.getCouponList(new Gson().toJson(orderGoodModels), uid, sid);
+            }
+        }).subscribe(new MyObserver<ResultModel<CouponModel>>() {
+            @Override
+            public void onNext(ResultModel<CouponModel> couponModelResultModel) {
+                String couponId = "";
+                List<CouponEntity> couponEntities = couponModelResultModel.getDatas().getCouponList();
+                if (couponEntities != null && couponEntities.size() > 0) {
+                    couponId = couponEntities.get(0).getId();
+                }
+                createOrderModel2.setTeaCouponId(couponId);
+            }
+
+        });
+
+    }
+
+
 }
