@@ -37,7 +37,7 @@ public class MainFragment extends Fragment {
 
     private EditText nameEt, vCodeEt;
 
-    private Map<String, String> user = new HashMap<>();
+    private Map<String, String> users = new HashMap<>();
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -71,6 +71,7 @@ public class MainFragment extends Fragment {
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR, 10);
+        calendar.set(Calendar.MINUTE, 20);
 
         long delay = calendar.getTimeInMillis() - date.getTime();
 
@@ -81,12 +82,12 @@ public class MainFragment extends Fragment {
             }
         }, delay);
 
-        user.put("13260213625", "G20W1auq/PLzs8Py");
+        users.put("13260213625", "G20W1auq/PLzs8Py");
 
         loginTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (Map.Entry<String, String> entry : user.entrySet()) {
+                for (Map.Entry<String, String> entry : users.entrySet()) {
                     mViewModel.login(entry.getKey(), entry.getValue());
                 }
 

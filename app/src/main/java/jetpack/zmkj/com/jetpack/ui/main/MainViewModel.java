@@ -111,8 +111,6 @@ public class MainViewModel extends ViewModel implements LoginListener, Lifecycle
      */
 
     public LiveData<Operation.State> startWork() {
-
-
         Data data = new Data.Builder().putString("key", "1111").build();
         Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).setRequiresBatteryNotLow(true).build();
         WorkRequest request = new OneTimeWorkRequest.Builder(MyWork.class).setInputData(data).setConstraints(constraints).build();

@@ -62,48 +62,56 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center"
-        android:text="获取验证码" />
+        android:text="获取验证码"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/login_tv"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center"
-        android:text="登陆" />
+        android:text="登陆获取生成订单信息" />
 
     <TextView
         android:id="@+id/get_goods_tv"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center"
-        android:text="获取首页信息" />
+        android:text="获取首页信息"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/get_goods_detail_tv"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center"
-        android:text="获取商品详细信息" />
+        android:text="获取商品详细信息"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/get_address_tv"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center"
-        android:text="获取地址信息" />
+        android:text="获取地址信息"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/pre_create_order_tv"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center"
-        android:text="获取预支付信息" />
+        android:text="获取预支付信息"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/pre_create_coupon_tv"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center"
-        android:text="获取优惠券信息" />
+        android:text="获取优惠券信息"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/create_order_tv"
         android:layout_width="match_parent"
