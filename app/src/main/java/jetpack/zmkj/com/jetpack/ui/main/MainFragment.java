@@ -27,7 +27,7 @@ public class MainFragment extends Fragment {
 
 
     private TextView loginTv;
-    private TextView getVCodeTv;
+    private TextView addUserTv;
     private TextView get_goods_tv;
     private TextView get_goods_detail_tv;
     private TextView get_address_tv;
@@ -35,7 +35,7 @@ public class MainFragment extends Fragment {
     private TextView pre_create_order_tv;
     private TextView pre_create_coupon_tv;
 
-    private EditText nameEt, vCodeEt;
+    private EditText nameEt, passwordEt;
 
     private Map<String, String> users = new HashMap<>();
 
@@ -50,8 +50,8 @@ public class MainFragment extends Fragment {
         View view = inflater.inflate(R.layout.main_fragment, container, false);
 
         nameEt = view.findViewById(R.id.name_et);
-        vCodeEt = view.findViewById(R.id.v_code_et);
-        getVCodeTv = view.findViewById(R.id.get_v_code_tv);
+        passwordEt = view.findViewById(R.id.password_et);
+        addUserTv = view.findViewById(R.id.add_user_tv);
         loginTv = view.findViewById(R.id.login_tv);
         get_goods_tv = view.findViewById(R.id.get_goods_tv);
         get_goods_detail_tv = view.findViewById(R.id.get_goods_detail_tv);
@@ -101,10 +101,12 @@ public class MainFragment extends Fragment {
             }
         });//绑定数据，view不和model直接交互，通过viewModel交互
 
-        getVCodeTv.setOnClickListener(new View.OnClickListener() {
+        addUserTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewModel.getVCode(nameEt.getText().toString());
+                users.put(nameEt.getText().toString(), passwordEt.getText().toString());
+
+                mViewModel.login(nameEt.getText().toString(), passwordEt.getText().toString());
             }
         });
 

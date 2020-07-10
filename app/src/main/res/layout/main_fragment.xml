@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="姓名"
+            android:text="手机号"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,18 +39,17 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/v_code_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="验证码"
+            android:text="密码"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/v_code_et"
+            android:id="@+id/password_et"
             android:layout_width="match_parent"
             android:layout_height="50dp">
 
@@ -58,12 +57,12 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/get_v_code_tv"
+        android:id="@+id/add_user_tv"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center"
-        android:text="获取验证码"
-        android:visibility="gone" />
+        android:text="添加用户"
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/login_tv"
