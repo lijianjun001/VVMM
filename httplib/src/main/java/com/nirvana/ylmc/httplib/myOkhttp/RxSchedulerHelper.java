@@ -1,22 +1,22 @@
 package com.nirvana.ylmc.httplib.myOkhttp;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class RxSchedulerHelper {
 
-    public static <T> Observable.Transformer<T, T> io_main() {
+    public static <T> ObservableTransformer<T, T> io_main() {
 
-        return new Observable.Transformer<T, T>() {
+        return new ObservableTransformer<T, T>() {
             @Override
-            public Observable<T> call(Observable<T> tObservable) {
-                return tObservable
-                        // 生产线程
-                        .subscribeOn(Schedulers.io())
-                        // 消费线程
-                        .observeOn(AndroidSchedulers.mainThread());
+            public ObservableSource<T> apply(Observable<T> upstream) {
+                return upstream.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
             }
         };
     }
+
+
 }

@@ -1,5 +1,6 @@
 package jetpack.zmkj.com.jetpack;
 
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.nirvana.ylmc.httplib.myOkhttp.converter.MyGsonConverterFactory;
 
 import java.io.IOException;
@@ -16,7 +17,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 
 public class RetrofitCreator {
 
@@ -25,7 +25,7 @@ public class RetrofitCreator {
                 .baseUrl(Constants.APP_URL_CLIENT_IP_PORT)
                 .client(configClient())
                 .addConverterFactory(MyGsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         return retrofit;
     }

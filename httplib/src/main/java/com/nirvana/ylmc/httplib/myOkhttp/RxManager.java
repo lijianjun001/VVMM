@@ -1,7 +1,7 @@
 package com.nirvana.ylmc.httplib.myOkhttp;
 
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by Administrator on 2016/12/31.
@@ -9,14 +9,14 @@ import rx.subscriptions.CompositeSubscription;
 
 public class RxManager {
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();// 管理订阅者
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();// 管理订阅者
 
-    public void add(Subscription m) {
-        mCompositeSubscription.add(m);
+    public void add(Disposable disposable) {
+        compositeDisposable.add(disposable);
     }
 
 
     public void clear() {
-        mCompositeSubscription.unsubscribe();// 取消订阅
+        compositeDisposable.clear();// 取消订阅
     }
 }

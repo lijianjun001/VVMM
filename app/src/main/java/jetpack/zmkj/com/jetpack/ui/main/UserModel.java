@@ -12,6 +12,12 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.HashMap;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import jetpack.zmkj.com.jetpack.http.AddressListModel;
 import jetpack.zmkj.com.jetpack.http.AddressModel;
 import jetpack.zmkj.com.jetpack.http.BuyIngDetailVoModel;
@@ -25,9 +31,6 @@ import jetpack.zmkj.com.jetpack.http.HomeDataModel;
 import jetpack.zmkj.com.jetpack.http.LoginModel;
 import jetpack.zmkj.com.jetpack.http.MyObserver;
 import jetpack.zmkj.com.jetpack.http.OrderGoodModel;
-import rx.Observable;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 public class UserModel extends BaseModel {
 
@@ -35,19 +38,20 @@ public class UserModel extends BaseModel {
     @HttpServiceAnnotation
     private CustomerService customerService;
 
-
     public static HashMap<String, CreateOrderModel2> createOrderModel2HashMap = new HashMap<>();
 
 
     public void login(String username, String password) {
 
-        mRxManager.add(customerService.login(username, password)
-                .compose(RxSchedulerHelper.<ResultModel<LoginModel>>io_main())
-                .subscribe(new MyObserver<ResultModel<LoginModel>>() {
+        customerService.login(username, password)
+                .compose(new ObservableTransformer<ResultModel<LoginModel>, ResultModel<LoginModel>>() {
+
                     @Override
-                    public void onCompleted() {
-                        Log.e("LoginModel", "onCompleted");
+                    public ObservableSource<ResultModel<LoginModel>> apply(Observable<ResultModel<LoginModel>> upstream) {
+                        return upstream.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
                     }
+                })
+                .subscribe(new MyObserver<ResultModel<LoginModel>>() {
 
                     @Override
                     public void onError(Throwable e) {
@@ -65,7 +69,7 @@ public class UserModel extends BaseModel {
                         preCreateOrder(loginModelResultModel.getDatas());
                         EventBus.getDefault().post(loginModelResultModel.getDatas());
                     }
-                }));
+                });
 
 
     }
@@ -218,26 +222,27 @@ public class UserModel extends BaseModel {
 
         });
 
-        goodsOb.flatMap(new Func1<ResultModel<HomeDataModel>, Observable<ResultModel<GoodsDetail>>>() {
+        goodsOb.flatMap(new Function<ResultModel<HomeDataModel>, Observable<ResultModel<GoodsDetail>>>() {
 
             @Override
-            public Observable<ResultModel<GoodsDetail>> call(ResultModel<HomeDataModel> homeDataModelResultModel) {
+            public Observable<ResultModel<GoodsDetail>> apply(ResultModel<HomeDataModel> homeDataModelResultModel) throws Exception {
                 String goodsId = homeDataModelResultModel.getDatas().getHomeData().getBanner().get(0).getBizId();
                 return customerService.getGoodsDetail(uid, sid, goodsId);
             }
-        }).subscribeOn(Schedulers.io()).flatMap(new Func1<ResultModel<GoodsDetail>, Observable<ResultModel<BuyIngDetailVoModel>>>() {
+        }).subscribeOn(Schedulers.io()).flatMap(new Function<ResultModel<GoodsDetail>, Observable<ResultModel<BuyIngDetailVoModel>>>() {
 
             @Override
-            public Observable<ResultModel<BuyIngDetailVoModel>> call(ResultModel<GoodsDetail> goodsDetailResultModel) {
+            public Observable<ResultModel<BuyIngDetailVoModel>> apply(ResultModel<GoodsDetail> goodsDetailResultModel) throws Exception {
+
                 GoodsDetail goodsDetail = goodsDetailResultModel.getDatas();
                 String productId = goodsDetail.getGoodsDetail().getSpec().get(0).getRefPid();
 
                 return customerService.preCreateOrder(productId, 1, uid, sid);
             }
-        }).flatMap(new Func1<ResultModel<BuyIngDetailVoModel>, Observable<ResultModel<CouponModel>>>() {
+        }).flatMap(new Function<ResultModel<BuyIngDetailVoModel>, Observable<ResultModel<CouponModel>>>() {
 
             @Override
-            public Observable<ResultModel<CouponModel>> call(ResultModel<BuyIngDetailVoModel> buyIngDetailVoModelResultModel) {
+            public Observable<ResultModel<CouponModel>> apply(ResultModel<BuyIngDetailVoModel> buyIngDetailVoModelResultModel) {
                 BuyIngDetailVoModel buyIngDetailVoModel = buyIngDetailVoModelResultModel.getDatas();
                 List<OrderGoodModel> orderGoodModels = buyIngDetailVoModel.getBuyIngDetailVo().getGoods();
 

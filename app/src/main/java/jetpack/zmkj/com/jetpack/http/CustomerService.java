@@ -3,12 +3,10 @@ package jetpack.zmkj.com.jetpack.http;
 
 import com.nirvana.ylmc.httplib.myOkhttp.ResultModel;
 
-import java.util.List;
-
+import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
-import rx.Observable;
 
 public interface CustomerService {
 

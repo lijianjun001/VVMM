@@ -1,6 +1,8 @@
 package jetpack.zmkj.com.jetpack;
 
 
+import io.reactivex.disposables.CompositeDisposable;
+
 public class AccountManager {
     private static volatile AccountManager accountManager;
 

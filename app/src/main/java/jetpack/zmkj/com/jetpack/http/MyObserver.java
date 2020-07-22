@@ -3,11 +3,13 @@ package jetpack.zmkj.com.jetpack.http;
 import android.util.Log;
 
 import com.nirvana.ylmc.httplib.myOkhttp.ApiException;
+import com.nirvana.ylmc.httplib.myOkhttp.RxManager;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import rx.Observer;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by lijianjun on 2017/9/7.
@@ -33,7 +35,23 @@ public abstract class MyObserver<T> implements Observer<T> {
     }
 
     @Override
-    public void onCompleted() {
+    public void onNext(T t) {
 
     }
+
+    @Override
+    public void onComplete() {
+
+    }
+
+    @Override
+    public void onSubscribe(Disposable d) {
+        Log.d("Disposable", "Disposable");
+        new RxManager().add(d);
+        if (!d.isDisposed()) {
+            d.dispose();
+        }
+
+    }
+
 }
