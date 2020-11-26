@@ -15,7 +15,7 @@ public class CustomApplication extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-        HttpServiceFactory.getInstance().init(RetrofitCreator.createRetrofit());
+        HttpServiceFactory.getInstance().init(RetrofitCreator2.createRetrofit());
         mAppDatabase = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, Constants.DATABASE_NAME).build();
     }
 

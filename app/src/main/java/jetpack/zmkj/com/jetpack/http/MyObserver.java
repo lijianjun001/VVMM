@@ -16,9 +16,10 @@ import io.reactivex.disposables.Disposable;
  */
 
 public abstract class MyObserver<T> implements Observer<T> {
+    private RxManager rxManager;
 
-    public MyObserver() {
-
+    public MyObserver(RxManager rxManager) {
+        this.rxManager = rxManager;
     }
 
 
@@ -47,11 +48,7 @@ public abstract class MyObserver<T> implements Observer<T> {
     @Override
     public void onSubscribe(Disposable d) {
         Log.d("Disposable", "Disposable");
-        new RxManager().add(d);
-        if (!d.isDisposed()) {
-            d.dispose();
-        }
-
+        rxManager.add(d);
     }
 
 }

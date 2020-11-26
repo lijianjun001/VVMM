@@ -51,7 +51,7 @@ public class UserModel extends BaseModel {
                         return upstream.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
                     }
                 })
-                .subscribe(new MyObserver<ResultModel<LoginModel>>() {
+                .subscribe(new MyObserver<ResultModel<LoginModel>>(mRxManager) {
 
                     @Override
                     public void onError(Throwable e) {
@@ -98,7 +98,7 @@ public class UserModel extends BaseModel {
 //                Log.d("", "onResponse: " + response.body().string());
 //            }
 //        });
-        customerService.getVCode(telephone, "0").compose(RxSchedulerHelper.<String>io_main()).subscribe(new MyObserver<String>() {
+        customerService.getVCode(telephone, "0").compose(RxSchedulerHelper.<String>io_main()).subscribe(new MyObserver<String>(mRxManager) {
 
             @Override
             public void onNext(String s) {
@@ -111,7 +111,7 @@ public class UserModel extends BaseModel {
     }
 
     public void getGoods(String uid, String sid) {
-        customerService.getGoods(uid, sid).compose(RxSchedulerHelper.<ResultModel<HomeDataModel>>io_main()).subscribe(new MyObserver<ResultModel<HomeDataModel>>() {
+        customerService.getGoods(uid, sid).compose(RxSchedulerHelper.<ResultModel<HomeDataModel>>io_main()).subscribe(new MyObserver<ResultModel<HomeDataModel>>(mRxManager) {
 
             @Override
             public void onNext(ResultModel<HomeDataModel> homeDataModel) {
@@ -123,7 +123,7 @@ public class UserModel extends BaseModel {
     }
 
     public void getGoodsDetail(String uid, String sid, String goodsId) {
-        customerService.getGoodsDetail(uid, sid, goodsId).compose(RxSchedulerHelper.<ResultModel<GoodsDetail>>io_main()).subscribe(new MyObserver<ResultModel<GoodsDetail>>() {
+        customerService.getGoodsDetail(uid, sid, goodsId).compose(RxSchedulerHelper.<ResultModel<GoodsDetail>>io_main()).subscribe(new MyObserver<ResultModel<GoodsDetail>>(mRxManager) {
 
             @Override
             public void onNext(ResultModel<GoodsDetail> goodsDetail) {
@@ -138,7 +138,7 @@ public class UserModel extends BaseModel {
     public void getAddress(String uid, String sid) {
 
 
-        customerService.getAddress(uid, sid).compose(RxSchedulerHelper.<ResultModel<AddressListModel>>io_main()).subscribe(new MyObserver<ResultModel<AddressListModel>>() {
+        customerService.getAddress(uid, sid).compose(RxSchedulerHelper.<ResultModel<AddressListModel>>io_main()).subscribe(new MyObserver<ResultModel<AddressListModel>>(mRxManager) {
 
             @Override
             public void onNext(ResultModel<AddressListModel> goodsDetail) {
@@ -151,7 +151,7 @@ public class UserModel extends BaseModel {
 
 
     public void preCreateOrder(String productId, int number, String uid, String sid) {
-        customerService.preCreateOrder(productId, number, uid, sid).compose(RxSchedulerHelper.<ResultModel<BuyIngDetailVoModel>>io_main()).subscribe(new MyObserver<ResultModel<BuyIngDetailVoModel>>() {
+        customerService.preCreateOrder(productId, number, uid, sid).compose(RxSchedulerHelper.<ResultModel<BuyIngDetailVoModel>>io_main()).subscribe(new MyObserver<ResultModel<BuyIngDetailVoModel>>(mRxManager) {
             @Override
             public void onNext(ResultModel<BuyIngDetailVoModel> buyIngDetailVoModelResultModel) {
 
@@ -163,7 +163,7 @@ public class UserModel extends BaseModel {
     public void getCouponList(List<OrderGoodModel> goods, String uid, String sid) {
 
 
-        customerService.getCouponList(new Gson().toJson(goods), uid, sid).compose(RxSchedulerHelper.<ResultModel<CouponModel>>io_main()).subscribe(new MyObserver<ResultModel<CouponModel>>() {
+        customerService.getCouponList(new Gson().toJson(goods), uid, sid).compose(RxSchedulerHelper.<ResultModel<CouponModel>>io_main()).subscribe(new MyObserver<ResultModel<CouponModel>>(mRxManager) {
             @Override
             public void onNext(ResultModel<CouponModel> listResultModel) {
                 EventBus.getDefault().post(listResultModel.getDatas());
@@ -190,7 +190,7 @@ public class UserModel extends BaseModel {
         buyingDetailModel.setRemark("");//备注信息
         buyingDetailModel.setTotalFee(totalFee);
 
-        customerService.createOrder(new Gson().toJson(buyingDetailModel), addressId, invoiceId, teaCouponId, type, uid, sid).compose(RxSchedulerHelper.<ResultModel<CreateOrderModel>>io_main()).subscribe(new MyObserver<ResultModel<CreateOrderModel>>() {
+        customerService.createOrder(new Gson().toJson(buyingDetailModel), addressId, invoiceId, teaCouponId, type, uid, sid).compose(RxSchedulerHelper.<ResultModel<CreateOrderModel>>io_main()).subscribe(new MyObserver<ResultModel<CreateOrderModel>>(mRxManager) {
 
             @Override
             public void onNext(ResultModel<CreateOrderModel> booleanResultModel) {
@@ -211,7 +211,7 @@ public class UserModel extends BaseModel {
 
         final CreateOrderModel2 createOrderModel2 = createOrderModel2HashMap.get(uid);
 
-        customerService.getAddress(uid, sid).compose(RxSchedulerHelper.<ResultModel<AddressListModel>>io_main()).subscribe(new MyObserver<ResultModel<AddressListModel>>() {
+        customerService.getAddress(uid, sid).compose(RxSchedulerHelper.<ResultModel<AddressListModel>>io_main()).subscribe(new MyObserver<ResultModel<AddressListModel>>(mRxManager) {
 
             @Override
             public void onNext(ResultModel<AddressListModel> addressListModelResultModel) {
@@ -253,7 +253,7 @@ public class UserModel extends BaseModel {
 
                 return customerService.getCouponList(new Gson().toJson(orderGoodModels), uid, sid);
             }
-        }).subscribe(new MyObserver<ResultModel<CouponModel>>() {
+        }).subscribe(new MyObserver<ResultModel<CouponModel>>(mRxManager) {
             @Override
             public void onNext(ResultModel<CouponModel> couponModelResultModel) {
                 String couponId = "";
